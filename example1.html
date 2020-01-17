@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Map point with lat/long</title>
+<style type="text/css">
+        #container {
+    min-width: 310px;
+    max-width: 700px;
+    height: 1800px;
+    margin: 0 auto;
+}
+    </style>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.6/proj4.js"></script>
+<script src="https://code.highcharts.com/maps/highmaps.js"></script>
+<script src="https://code.highcharts.com/stock/modules/data.js"></script>
+<script src="https://code.highcharts.com/mapdata/custom/europe.js"></script>
+<script src="https://code.highcharts.com/modules/marker-clusters.js"></script>
+<script src="https://code.highcharts.com/modules/coloraxis.js"></script>
+<script src="https://code.highcharts.com/mapdata/countries/th/th-all.js"></script>
+<script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+
+<div id="container"></div>
+
+<script>
+Highcharts.getJSON('http://localhost:3000/user', function (data) {
+    Highcharts.mapChart('container', {
+        chart: {
+            map: 'countries/th/th-all'
+        },
+        title: {
+            text: 'อำเภอในประเทศไทย'
+        },
+        subtitle: {
+            text: 'Source: <a href="https://github.com/trainline-eu/stations">' +
+                'github.com/trainline-eu/stations</a>'
+        },
+        mapNavigation: {
+            enabled: true
+        },
+        tooltip: {
+            headerFormat: '',
+            pointFormat: '<b>{point.name}</b><br>Lat: {point.lat:.2f}, Lon: {point.lon:.2f}'
+        },
+        colorAxis: {
+            min: 0,
+            max: 20
+        },
+        plotOptions: {
+            mappoint: {
+                cluster: {
+                    enabled: true,
+                    allowOverlap: false,
+                    animation: {
+                        duration: 450
+                    },
+                    layoutAlgorithm: {
+                        type: 'grid',
+                        gridSize: 70
+                    },
+                    zones: [{
+                        from: 1,
+                        to: 4,
+                        marker: {
+                            radius: 13
+                        }
+                    }, {
+                        from: 5,
+                        to: 9,
+                        marker: {
+                            radius: 15
+                        }
+                    }, {
+                        from: 10,
+                        to: 15,
+                        marker: {
+                            radius: 17
+                        }
+                    }, {
+                        from: 16,
+                        to: 20,
+                        marker: {
+                            radius: 19
+                        }
+                    }, {
+                        from: 21,
+                        to: 100,
+                        marker: {
+                            radius: 21
+                        }
+                    }]
+                }
+            }
+        },
+        series: [{
+            name: 'Basemap',
+            borderColor: '#A0A0A0',
+            nullColor: 'rgba(177, 244, 177, 0.5)',
+            showInLegend: false
+        }, {
+            type: 'mappoint',
+            enableMouseTracking: true,
+            colorKey: 'clusterPointsAmount',
+            name: 'Cities',
+            data: data
+        }]
+    });
+});
+	</script>
